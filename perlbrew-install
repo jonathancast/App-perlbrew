@@ -1,28 +1,23 @@
 #!/bin/sh
 
 
-clean_exit () {
-    [ -f $LOCALINSTALLER ] && rm $LOCALINSTALLER
-    exit $1
-}
-
-LOCALINSTALLER=$(mktemp perlbrew.XXXXXX)
-
 if [ -z "${PERLBREWURL}" ]; then
     PERLBREWURL=https://raw.githubusercontent.com/gugod/App-perlbrew/master/perlbrew
 fi
 
-if [ -z "$TMPDIR" ]; then
-    if [ -d "/tmp" ]; then
-        TMPDIR="/tmp"
-        cd $TMPDIR || clean_exit 1
-    else
-        TMPDIR="."
-    fi
+
+TMPDIR=${TMPDIR:-/tmp}
+if [ -d "$TMPDIR" ]; then
+    cd "$TMPDIR" || exit 1
 fi
 
 
+LOCALINSTALLER=$(mktemp perlbrew.XXXXXX)
 
+clean_exit () {
+    [ -f $LOCALINSTALLER ] && rm $LOCALINSTALLER
+    exit $1
+}
 
 
 echo
